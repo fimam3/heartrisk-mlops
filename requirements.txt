@@ -1,0 +1,11 @@
+# Full environment: EDA, training, tracking, serving, tests.
+# Tested with Python 3.13. Versions are pinned for reproducibility.
+-r requirements-serve.txt
+mlflow==3.17.1
+matplotlib==3.11.2
+seaborn==0.13.2
+cloudpickle==3.1.2
+scipy==1.18.1
+pytest==9.1.1
+flake8==7.4.1
+httpx==0.28.1

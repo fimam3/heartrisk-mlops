@@ -1,0 +1,69 @@
+{
+  "uid": "heartrisk-api",
+  "title": "HeartRisk API",
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "5s",
+  "time": { "from": "now-15m", "to": "now" },
+  "tags": ["heartrisk", "mlops"],
+  "panels": [
+    {
+      "id": 1, "type": "stat", "title": "Model loaded",
+      "gridPos": { "h": 4, "w": 4, "x": 0, "y": 0 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [{ "expr": "min(heartrisk_model_loaded)", "refId": "A" }],
+      "fieldConfig": { "defaults": {
+        "mappings": [{ "type": "value", "options": { "0": { "text": "NO", "color": "red" }, "1": { "text": "YES", "color": "green" } } }],
+        "thresholds": { "mode": "absolute", "steps": [{ "color": "red", "value": null }, { "color": "green", "value": 1 }] }
+      } }
+    },
+    {
+      "id": 2, "type": "stat", "title": "Predictions served",
+      "gridPos": { "h": 4, "w": 5, "x": 4, "y": 0 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [{ "expr": "sum(heartrisk_predictions_total)", "refId": "A" }]
+    },
+    {
+      "id": 3, "type": "stat", "title": "5xx error rate (5m)",
+      "gridPos": { "h": 4, "w": 5, "x": 9, "y": 0 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [{ "expr": "sum(rate(heartrisk_http_requests_total{status=~\"5..\"}[5m])) / clamp_min(sum(rate(heartrisk_http_requests_total[5m])), 1e-9)", "refId": "A" }],
+      "fieldConfig": { "defaults": { "unit": "percentunit", "decimals": 2 } }
+    },
+    {
+      "id": 4, "type": "stat", "title": "In-flight requests",
+      "gridPos": { "h": 4, "w": 5, "x": 14, "y": 0 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [{ "expr": "sum(heartrisk_in_flight_requests)", "refId": "A" }]
+    },
+    {
+      "id": 5, "type": "timeseries", "title": "Request rate by endpoint (req/s)",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 4 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [{ "expr": "sum by (endpoint, status) (rate(heartrisk_http_requests_total[1m]))", "legendFormat": "{{endpoint}} {{status}}", "refId": "A" }]
+    },
+    {
+      "id": 6, "type": "timeseries", "title": "Latency p50 / p95 (seconds)",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 4 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": { "defaults": { "unit": "s" } },
+      "targets": [
+        { "expr": "histogram_quantile(0.50, sum by (le) (rate(heartrisk_http_request_duration_seconds_bucket{endpoint=\"/predict\"}[1m])))", "legendFormat": "p50 /predict", "refId": "A" },
+        { "expr": "histogram_quantile(0.95, sum by (le) (rate(heartrisk_http_request_duration_seconds_bucket{endpoint=\"/predict\"}[1m])))", "legendFormat": "p95 /predict", "refId": "B" }
+      ]
+    },
+    {
+      "id": 7, "type": "timeseries", "title": "Predictions by outcome (per minute)",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 12 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [{ "expr": "sum by (label) (increase(heartrisk_predictions_total[1m]))", "legendFormat": "{{label}}", "refId": "A" }]
+    },
+    {
+      "id": 8, "type": "timeseries", "title": "Mean predicted probability (drift signal)",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 12 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": { "defaults": { "min": 0, "max": 1 } },
+      "targets": [{ "expr": "sum(rate(heartrisk_predicted_probability_sum[5m])) / clamp_min(sum(rate(heartrisk_predicted_probability_count[5m])), 1e-9)", "legendFormat": "mean P(disease)", "refId": "A" }]
+    }
+  ]
+}

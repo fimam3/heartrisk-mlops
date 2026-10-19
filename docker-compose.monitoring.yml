@@ -1,0 +1,33 @@
+# API + Prometheus + Grafana on one machine:  docker compose -f docker-compose.monitoring.yml up --build
+#   API        http://localhost:8000/docs
+#   Prometheus http://localhost:9090
+#   Grafana    http://localhost:3000   (admin / admin; the dashboard is pre-provisioned)
+services:
+  api:
+    build: .
+    image: heartrisk-api:1.0
+    ports:
+      - "8000:8000"
+
+  prometheus:
+    image: prom/prometheus:v2.55.1
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    ports:
+      - "9090:9090"
+    depends_on:
+      - api
+
+  grafana:
+    image: grafana/grafana:11.3.0
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin
+      GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH: /var/lib/grafana/dashboards/heartrisk.json
+    volumes:
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./monitoring/grafana/dashboards:/var/lib/grafana/dashboards:ro
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus

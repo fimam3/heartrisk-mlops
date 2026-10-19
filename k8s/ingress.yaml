@@ -1,0 +1,20 @@
+# Optional second way to expose the API (needs an ingress controller, e.g.
+# `minikube addons enable ingress`). Add "<ingress-ip> heartrisk.local" to your hosts file.
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: heartrisk-api
+  namespace: heartrisk
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: heartrisk.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: heartrisk-api
+                port:
+                  name: http

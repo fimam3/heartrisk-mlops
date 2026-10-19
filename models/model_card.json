@@ -1,0 +1,69 @@
+{
+  "model_name": "heartrisk-classifier",
+  "algorithm": "logistic_regression",
+  "version": "663a051bf505",
+  "trained_at": "2026-10-16T10:51:52+00:00",
+  "features": [
+    "age",
+    "sex",
+    "cp",
+    "trestbps",
+    "chol",
+    "fbs",
+    "restecg",
+    "thalach",
+    "exang",
+    "oldpeak",
+    "slope",
+    "ca",
+    "thal"
+  ],
+  "target": "1 = heart disease present, 0 = absent",
+  "best_params": {
+    "C": 0.1,
+    "class_weight": "None"
+  },
+  "cv_metrics": {
+    "accuracy": {
+      "mean": 0.8137755102040817,
+      "std": 0.07977305449824992
+    },
+    "precision": {
+      "mean": 0.8144130379424496,
+      "std": 0.0835241091999581
+    },
+    "recall": {
+      "mean": 0.7644268774703558,
+      "std": 0.11384085398729824
+    },
+    "f1": {
+      "mean": 0.7870190274841438,
+      "std": 0.09712576146159912
+    },
+    "roc_auc": {
+      "mean": 0.8889102845624585,
+      "std": 0.049192445091929375
+    }
+  },
+  "test_metrics": {
+    "accuracy": 0.8852459016393442,
+    "precision": 0.8387096774193549,
+    "recall": 0.9285714285714286,
+    "f1": 0.8813559322033898,
+    "roc_auc": 0.9642857142857144
+  },
+  "top_features": [
+    "ca",
+    "cp",
+    "oldpeak",
+    "thalach",
+    "thal"
+  ],
+  "n_train": 242,
+  "n_test": 61,
+  "sklearn_version": "1.9.1",
+  "python_version": "3.13.16",
+  "git_sha": "unknown",
+  "mlflow_run_id": "1356fe5d3a1946859caa4390e9dc257e",
+  "best_child_run_id": "1f751ff266904ec79986917c4b00018f"
+}

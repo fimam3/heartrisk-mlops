@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: heartrisk-api
+  namespace: heartrisk
+  labels:
+    app: heartrisk-api
+spec:
+  # LoadBalancer: on Minikube run `minikube tunnel`; on Docker Desktop it gets localhost;
+  # on GKE/EKS/AKS the cloud provisions a public IP.
+  type: LoadBalancer
+  selector:
+    app: heartrisk-api
+  ports:
+    - name: http
+      port: 80
+      targetPort: http

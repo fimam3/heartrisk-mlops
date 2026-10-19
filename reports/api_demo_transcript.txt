@@ -1,0 +1,14 @@
+# Real calls against the running API (model: 663a051bf505, served by uvicorn on localhost:8000)
+
+$ curl -s localhost:8000/health
+{"status":"ok","model_loaded":true,"api_version":"1.0.0"}
+
+$ curl -s -X POST localhost:8000/predict -H 'Content-Type: application/json' -d '{"age":63,"sex":1,"cp":1,"trestbps":145,"chol":233,"fbs":1,"restecg":2,"thalach":150,"exang":0,"oldpeak":2.3,"slope":3,"ca":0,"thal":6}'
+{"prediction":0,"label":"No heart disease","probability_disease":0.3587,"confidence":0.6413,"model_version":"663a051bf505"}
+
+$ curl -s -X POST localhost:8000/predict -H 'Content-Type: application/json' -d '{"age":67,"sex":1,"cp":4,"trestbps":160,"chol":286,"fbs":0,"restecg":2,"thalach":108,"exang":1,"oldpeak":1.5,"slope":2,"ca":3,"thal":3}'
+{"prediction":1,"label":"Heart disease","probability_disease":0.9806,"confidence":0.9806,"model_version":"663a051bf505"}
+
+$ curl -s -o /dev/null -w 'HTTP %{http_code}' -X POST localhost:8000/predict -H 'Content-Type: application/json' -d '{"age":5,"sex":1,"cp":1,"trestbps":145,"chol":233,"fbs":1,"restecg":2,"thalach":150,"exang":0,"oldpeak":2.3,"slope":3}'
+HTTP 422
+
