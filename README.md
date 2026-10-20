@@ -31,6 +31,19 @@ pip install -r requirements.txt
 export PYTHONPATH=src                                   # Windows PowerShell: $env:PYTHONPATH="src"
 ```
 
+### 1a. Tools to install
+
+| Tool | Needed for | Install |
+|---|---|---|
+| Git + a GitHub account | repository, GitHub Actions | https://git-scm.com/downloads (Windows: `winget install Git.Git`) |
+| Python 3.13 | training, tests, API | https://www.python.org/downloads/ (or `uv python install 3.13`) |
+| Docker | container, monitoring stack | Docker Desktop (Windows/macOS) or `curl -fsSL https://get.docker.com \| sudo sh` (Linux) |
+| kubectl + Kubernetes | deployment | enable Kubernetes in Docker Desktop, or install Minikube (`minikube start --driver=docker`) |
+| Prometheus + Grafana | monitoring | nothing to install, they run through `docker compose` (section 8) |
+
+On a Linux VM, `scripts/vm/` contains ready-made scripts that install the tools and run every step in order
+(see `scripts/vm/README.md`): `vm_setup.sh`, `vm_pipeline.sh`, `vm_docker.sh`, `vm_k8s.sh`, `vm_monitoring.sh`.
+
 ## 2. Run the pipeline
 
 | Step | Command | Output |
